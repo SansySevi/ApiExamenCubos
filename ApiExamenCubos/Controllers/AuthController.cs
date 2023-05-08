@@ -63,5 +63,13 @@ namespace ApiExamenCubos.Controllers
 
         }
 
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<ActionResult> Register(Usuario user)
+        {
+            await this.repo.RegisterAsync(user);
+            return Ok();
+        }
+
     }
 }

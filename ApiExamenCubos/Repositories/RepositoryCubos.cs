@@ -20,6 +20,33 @@ namespace ApiExamenCubos.Repositories
                 .FirstOrDefaultAsync(x => x.Email == email && x.Password == password);
         }
 
+        private async Task<int> GetMaxUserAsync()
+        {
+            if (this.context.Usuarios.Count() == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return await this.context.Usuarios.MaxAsync(x => x.IdUsuario) + 1;
+            }
+        }
+
+        public async Task RegisterAsync(Usuario user)
+        {
+            Usuario newUser = new Usuario()
+            {
+                IdUsuario = await this.GetMaxUserAsync(),
+                Password = user.Password,
+                Email = user.Email,
+                Nombre = user.Nombre,
+                ImagenPerfil = user.ImagenPerfil
+            };
+
+            this.context.Add(newUser);
+            await this.context.SaveChangesAsync();
+        }
+
 
         private async Task<int> GetMaxPedidoAsync()
         {
@@ -33,9 +60,22 @@ namespace ApiExamenCubos.Repositories
             }
         }
 
+        public async Task<List<string>> GetMarcasAsync()
+        {
+            var consulta = (from datos in this.context.Cubos
+                            select datos.Marca).Distinct();
+            return await consulta.ToListAsync();
+            
+        }
+
         public async Task<List<Cubo>> GetProductosAsync()
         {
             return await this.context.Cubos.ToListAsync();
+        }
+
+        public async Task<List<Cubo>> GetProductosMarcaAsync(string marca)
+        {
+            return await this.context.Cubos.Where(x=> x.Marca == marca).ToListAsync();
         }
 
         public async Task<Cubo> FindProductoAsync(int id)

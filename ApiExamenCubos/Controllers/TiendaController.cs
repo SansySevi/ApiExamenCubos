@@ -19,9 +19,25 @@ namespace ApiExamenCubos.Controllers
 
         [HttpGet]
         [Route("[action]")]
+        public async Task<ActionResult<List<string>>> Marcas()
+        {
+            List<string> list = await this.repo.GetMarcasAsync();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("[action]")]
         public async Task<ActionResult<List<Cubo>>> Productos()
         {
             List<Cubo> list = await this.repo.GetProductosAsync();
+            return list;
+        }
+
+        [HttpGet]
+        [Route("[action]/{marca}")]
+        public async Task<ActionResult<List<Cubo>>> ProductosMarca(string marca)
+        {
+            List<Cubo> list = await this.repo.GetProductosMarcaAsync(marca);
             return list;
         }
 
