@@ -47,6 +47,18 @@ namespace ApiExamenCubos.Repositories
             await this.context.SaveChangesAsync();
         }
 
+        private async Task<int> GetMaxProductoAsync()
+        {
+            if (this.context.Cubos.Count() == 0)
+            {
+                return 1;
+            }
+            else
+            {
+                return await this.context.Cubos.MaxAsync(x => x.IdCubo) + 1;
+            }
+        }
+
 
         private async Task<int> GetMaxPedidoAsync()
         {
@@ -83,10 +95,26 @@ namespace ApiExamenCubos.Repositories
             return await this.context.Cubos.FirstOrDefaultAsync(x => x.IdCubo == id);
         }
 
+        public async Task RegistrarProductoAsync(Cubo cubo)
+        {
+            Cubo newCubo = new Cubo()
+            {
+                IdCubo = await this.GetMaxProductoAsync(),
+                Nombre = cubo.Nombre,
+                Marca = cubo.Marca,
+                Imagen = cubo.Imagen,
+                Precio = cubo.Precio
+            };
+
+            this.context.Add(newCubo);
+            await this.context.SaveChangesAsync();
+        }
+
         public async Task<List<Pedido>> GetPedidos(int idUser)
         {
             return await this.context.Pedidos.Where(x => x.IdUsuario == idUser).ToListAsync();
         }
+
 
         public async Task RegistrarPedidoAsync(Pedido pedido)
         {

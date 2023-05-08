@@ -48,5 +48,13 @@ namespace ApiExamenCubos.Controllers
             Cubo producto = await this.repo.FindProductoAsync(id);
             return producto;
         }
+
+        [HttpPost]
+        [Route("[action]")]
+        public async Task<ActionResult> CrearProducto(Cubo cubo)
+        {
+            await this.repo.RegistrarProductoAsync(cubo);
+            return Ok();
+        }
     }
 }
