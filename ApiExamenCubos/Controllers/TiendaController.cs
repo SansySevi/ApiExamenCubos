@@ -51,7 +51,7 @@ namespace ApiExamenCubos.Controllers
 
         [HttpPost]
         [Route("[action]")]
-        public async Task<ActionResult> CrearProducto(Cubo cubo)
+        public async Task<ActionResult> InsertarProducto(Cubo cubo)
         {
             await this.repo.RegistrarProductoAsync(cubo);
             return Ok();
